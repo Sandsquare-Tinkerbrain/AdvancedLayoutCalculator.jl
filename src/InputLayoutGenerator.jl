@@ -1,9 +1,14 @@
 module InputLayoutGenerator
 
-export GeneralLayout
-include("layout.jl")
+include("TextProcessor/TextProcessor.jl")
+using .TextProcessor
+export getngrams
 
-# Write your package code here.
+
+
+include("layout.jl")
+export GeneralLayout
+
 
 
 test() = println("test")

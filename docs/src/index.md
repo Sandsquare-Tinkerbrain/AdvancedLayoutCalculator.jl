@@ -4,7 +4,7 @@ CurrentModule = InputLayoutGenerator
 
 # InputLayoutGenerator
 
-Documentation for [InputLayoutGenerator](https://github.com/sdgu/InputLayoutGenerator.jl).
+Documentation for [InputLayoutGenerator](https://github.com/Sandsquare-Tinkerbrain/InputLayoutGenerator.jl).
 
 ```@index
 ```
@@ -12,3 +12,4 @@ Documentation for [InputLayoutGenerator](https://github.com/sdgu/InputLayoutGene
 ```@autodocs
 Modules = [InputLayoutGenerator]
 ```
+

@@ -6,11 +6,11 @@ DocMeta.setdocmeta!(InputLayoutGenerator, :DocTestSetup, :(using InputLayoutGene
 makedocs(;
     modules=[InputLayoutGenerator],
     authors="Sh",
-    repo="https://github.com/sdgu/InputLayoutGenerator.jl/blob/{commit}{path}#{line}",
+    repo="https://github.com/Sandsquare-Tinkerbrain/InputLayoutGenerator.jl/blob/{commit}{path}#{line}",
     sitename="InputLayoutGenerator.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://sdgu.github.io/InputLayoutGenerator.jl",
+        canonical="https://Sandsquare-Tinkerbrain.github.io/InputLayoutGenerator.jl",
         edit_link="master",
         assets=String[],
     ),
@@ -20,6 +20,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/sdgu/InputLayoutGenerator.jl",
+    repo="github.com/Sandsquare-Tinkerbrain/InputLayoutGenerator.jl",
     devbranch="master",
 )
