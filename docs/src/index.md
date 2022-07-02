@@ -11,6 +11,6 @@ getngrams(str)
 ```
 
 ```@autodocs
-Modules = [InputLayoutGenerator]
+Modules = [InputLayoutGenerator, TextProcessor]
 ```
 

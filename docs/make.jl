@@ -21,5 +21,4 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/Sandsquare-Tinkerbrain/InputLayoutGenerator.jl",
-    devbranch="main",
 )
