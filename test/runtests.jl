@@ -1,6 +1,8 @@
-using ConsoleLayoutGenerator
+using InputLayoutGenerator
 using Test
 
-@testset "ConsoleLayoutGenerator.jl" begin
-    # Write your tests here.
+@testset "InputLayoutGenerator.jl" begin
+    @test 1 == 1
+    x = GeneralLayout()
+    test()
 end

@@ -11,7 +11,7 @@ version = "0.0.1"
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
-[[deps.ConsoleLayoutGenerator]]
+[[deps.InputLayoutGenerator]]
 path = ".."
 uuid = "3d078299-5027-49aa-9ac9-55df01d4ae3a"
 version = "0.1.0"

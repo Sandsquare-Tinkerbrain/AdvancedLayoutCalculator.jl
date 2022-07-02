@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = ConsoleLayoutGenerator
+CurrentModule = InputLayoutGenerator
 ```
 
-# ConsoleLayoutGenerator
+# InputLayoutGenerator
 
-Documentation for [ConsoleLayoutGenerator](https://github.com/sdgu/ConsoleLayoutGenerator.jl).
+Documentation for [InputLayoutGenerator](https://github.com/sdgu/InputLayoutGenerator.jl).
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [ConsoleLayoutGenerator]
+Modules = [InputLayoutGenerator]
 ```
