@@ -11,7 +11,7 @@ makedocs(;
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://Sandsquare-Tinkerbrain.github.io/InputLayoutGenerator.jl",
-        edit_link="master",
+        edit_link="main",
         assets=String[],
     ),
     pages=[
@@ -21,5 +21,5 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/Sandsquare-Tinkerbrain/InputLayoutGenerator.jl",
-    devbranch="master",
+    devbranch="main",
 )
