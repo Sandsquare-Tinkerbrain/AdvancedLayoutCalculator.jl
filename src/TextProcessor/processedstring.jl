@@ -16,6 +16,10 @@ Base.length(pstr::PString) = length(getv(pstr))
 Base.getindex(pstr::PString, i::Int64) = getindex(getv(pstr), i)
 # TODO: equals
 
+function PString(text::String)::PString
+    return to_pstring(text)
+end
+
 
 """
 to_string(::PString)
