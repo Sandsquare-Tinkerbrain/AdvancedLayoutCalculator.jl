@@ -55,6 +55,6 @@ jobs:
       # - run: |
       #     julia --project=docs -e '
       #       using Documenter: DocMeta, doctest
-      #       using InputLayoutGenerator
-      #       DocMeta.setdocmeta!(InputLayoutGenerator, :DocTestSetup, :(using InputLayoutGenerator); recursive=true)
-      #       doctest(InputLayoutGenerator)'
+      #       using AdvancedLayoutCalculator
+      #       DocMeta.setdocmeta!(AdvancedLayoutCalculator, :DocTestSetup, :(using AdvancedLayoutCalculator); recursive=true)
+      #       doctest(AdvancedLayoutCalculator)'

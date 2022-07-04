@@ -12,7 +12,7 @@ abstract type AbstractPiece end
 Stores n-gram counts of a piece of text. Only accounts for raw characters.
 
 ```jldoctest
-julia> using InputLayoutGenerator.TextProcessor
+julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> d = Dict("a" => 10, "e" => 4); 
 
@@ -41,7 +41,7 @@ end
 Test thing
 
 ```jldoctest
-julia> using InputLayoutGenerator.TextProcessor
+julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> getngrams("hello")
 5

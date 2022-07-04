@@ -1,16 +1,16 @@
-using InputLayoutGenerator
+using AdvancedLayoutCalculator
 using Documenter
 
-DocMeta.setdocmeta!(InputLayoutGenerator, :DocTestSetup, :(using InputLayoutGenerator); recursive=true)
+DocMeta.setdocmeta!(AdvancedLayoutCalculator, :DocTestSetup, :(using AdvancedLayoutCalculator); recursive=true)
 
 makedocs(;
-    modules=[InputLayoutGenerator],
+    modules=[AdvancedLayoutCalculator],
     authors="Sh",
-    repo="https://github.com/Sandsquare-Tinkerbrain/InputLayoutGenerator.jl/blob/{commit}{path}#{line}",
-    sitename="InputLayoutGenerator.jl",
+    repo="https://github.com/Sandsquare-Tinkerbrain/AdvancedLayoutCalculator.jl/blob/{commit}{path}#{line}",
+    sitename="AdvancedLayoutCalculator.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://Sandsquare-Tinkerbrain.github.io/InputLayoutGenerator.jl",
+        canonical="https://Sandsquare-Tinkerbrain.github.io/AdvancedLayoutCalculator.jl",
         edit_link="main",
         assets=String[],
     ),
@@ -20,5 +20,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/Sandsquare-Tinkerbrain/InputLayoutGenerator.jl",
+    repo="github.com/Sandsquare-Tinkerbrain/AdvancedLayoutCalculator.jl",
 )

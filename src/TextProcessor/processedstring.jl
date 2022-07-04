@@ -27,7 +27,7 @@ to_string(::PString)
 Converts PString to String.
 
 ```jldoctest
-julia> using InputLayoutGenerator.TextProcessor
+julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> p = PString(['1', 'h', :shift, 'p']);
 
@@ -61,7 +61,7 @@ end
 Converts String to PString. Currently only accounts for capital alphas.
 
 ```jldoctest
-julia> using InputLayoutGenerator.TextProcessor
+julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> p = to_pstring("helLo")
 PString(Union{Char, Symbol}['h', 'e', 'l', :shift, 'l', 'o'])

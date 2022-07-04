@@ -1,8 +1,8 @@
-using InputLayoutGenerator
+using AdvancedLayoutCalculator
 using Test
 
 
-@testset "InputLayoutGenerator.jl" begin
+@testset "AdvancedLayoutCalculator.jl" begin
     # @test 1 == 1
     # x = GeneralLayout()
     # test()

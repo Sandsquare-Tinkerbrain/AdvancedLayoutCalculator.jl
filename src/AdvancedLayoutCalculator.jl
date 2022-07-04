@@ -1,4 +1,4 @@
-module InputLayoutGenerator
+module AdvancedLayoutCalculator
 
     include("TextProcessor/TextProcessor.jl")
 

@@ -1,16 +1,16 @@
 ```@meta
-CurrentModule = InputLayoutGenerator
+CurrentModule = AdvancedLayoutCalculator
 ```
 
-# InputLayoutGenerator
+# AdvancedLayoutCalculator
 
-Documentation for [InputLayoutGenerator](https://github.com/Sandsquare-Tinkerbrain/InputLayoutGenerator.jl).
+Documentation for [AdvancedLayoutCalculator](https://github.com/Sandsquare-Tinkerbrain/AdvancedLayoutCalculator.jl).
 
 ```@index
 
 ```
 
 ```@autodocs
-Modules = [InputLayoutGenerator, TextProcessor]
+Modules = [AdvancedLayoutCalculator, TextProcessor]
 ```
 
