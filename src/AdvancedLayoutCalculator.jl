@@ -1,11 +1,12 @@
 module AdvancedLayoutCalculator
 
-    include("TextProcessor/TextProcessor.jl")
-
-
     include("layout.jl")
     export GeneralLayout
 
+    include("TextProcessor/TextProcessor.jl")
+
+
+    
 
 end
 

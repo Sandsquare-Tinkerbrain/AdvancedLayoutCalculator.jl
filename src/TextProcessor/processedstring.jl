@@ -1,6 +1,6 @@
 abstract type AbstractPString end
 
-PChar = Union{Char, Symbol}
+
 
 """
     PString
@@ -29,18 +29,18 @@ Converts PString to String.
 ```jldoctest
 julia> using AdvancedLayoutCalculator.TextProcessor
 
-julia> p = PString(['1', 'h', :shift, 'p']);
+julia> p = PString(["1", "h", :shift, "p"]);
 
 julia> q = to_string(p)
 "1hP"
 
 julia> to_pstring(q)
-PString(Union{Char, Symbol}['1', 'h', :shift, 'p'])
+PString(Union{String, Symbol}["1", "h", :shift, "p"])
 ```
 """
 function to_string(pstr::PString)::String
     outstr = ""
-    nextf(x::Char) = identity(x)
+    nextf(x::String) = identity(x)
     for i in 1:length(pstr)
         c = pstr[i]
         if c == :shift
@@ -64,7 +64,7 @@ Converts String to PString. Currently only accounts for capital alphas.
 julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> p = to_pstring("helLo")
-PString(Union{Char, Symbol}['h', 'e', 'l', :shift, 'l', 'o'])
+PString(Union{String, Symbol}["h", "e", "l", :shift, "l", "o"])
 
 julia> to_string(p)
 "helLo"
@@ -73,8 +73,8 @@ julia> to_string(p)
 function to_pstring(str::String)::PString
     v = PChar[]
     for i in 1:length(str)
-        c = str[i]
-        if isuppercase(c)
+        c = str[i:i]
+        if isuppercase(c[1])
             push!(v, :shift)
             push!(v, lowercase(c))
         else
