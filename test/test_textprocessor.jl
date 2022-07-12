@@ -122,3 +122,13 @@ end
     @test r1.total == 14
 end
 
+@testset "actual text" begin
+    f = "../1342-0.txt"
+    open(f, "r") do fi
+        s = read(f, String)
+        d = getngrams(s, 4)
+        println(length(d))
+    end
+
+end
+

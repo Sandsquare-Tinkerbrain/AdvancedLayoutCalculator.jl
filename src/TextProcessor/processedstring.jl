@@ -35,7 +35,7 @@ julia> q = to_string(p)
 "1hP"
 
 julia> to_pstring(q)
-PString(Union{String, Symbol}["1", "h", :shift, "p"])
+PString(Union{AbstractString, Symbol}["1", "h", :shift, "p"])
 ```
 """
 function to_string(pstr::PString)::String
@@ -64,7 +64,7 @@ Converts String to PString. Currently only accounts for capital alphas.
 julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> p = to_pstring("helLo")
-PString(Union{String, Symbol}["h", "e", "l", :shift, "l", "o"])
+PString(Union{AbstractString, Symbol}["h", "e", "l", :shift, "l", "o"])
 
 julia> to_string(p)
 "helLo"

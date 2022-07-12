@@ -36,6 +36,11 @@ struct RawPiece <: AbstractPiece
     end
 end
 
+"""
+    RawPiece(rawtext::String, n::Int)
+
+Get RawPiece from `rawtext` up to `n` grams.
+"""
 function RawPiece(rawtext::String, up2n::Int)
     d = getngrams(rawtext, up2n)
     newd = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(d))
@@ -74,10 +79,18 @@ function getngrams(rawtext::String, up2n::Int)
     d = Dict{PChar, Number}()
 
     subgramsizes = 1:up2n-1
+
+    validinds = collect(eachindex(rawtext))
+
     for i in 1:total-up2n+1
-        ss = view(rawtext, i:i+up2n-1)
+        startind = validinds[i]
+        endind = validinds[i+up2n-1] 
+        ss = view(rawtext, startind:endind)
         for sgs in subgramsizes
-            untouched = if i == 1 ss else view(ss, length(ss)-sgs+1:length(ss)) end
+            validss = collect(eachindex(ss))
+            startss = validss[end-sgs+1]
+            endss = validss[end]
+            untouched = if i == 1 ss else view(ss, startss:endss) end
             subgrams = _ngram(untouched, sgs)
             _updatedict!(d, subgrams)
         end
@@ -103,7 +116,17 @@ julia> AdvancedLayoutCalculator.TextProcessor._ngram("hello Ez", 3)
  " Ez"
 ```
 """
-_ngram(s::AbstractString, n::Int) = [view(s,i:i+n-1) for i=1:length(s)-n+1]
+function _ngram(s::AbstractString, n::Int)
+    grams = AbstractString[]
+    validinds = collect(eachindex(s))
+    for i in 1:length(s)-n+1
+        startind = validinds[i]
+        endind = validinds[i+n-1]
+        push!(grams, view(s, startind:endind))
+    end
+    # [view(s,i:i+n-1) for i=1:length(s)-n+1]
+    return grams
+end
 
 
 """
@@ -115,7 +138,7 @@ julia> using AdvancedLayoutCalculator.TextProcessor
 julia> d = Dict{PChar, Number}("a" => 1);
 
 julia> AdvancedLayoutCalculator.TextProcessor._updatedict!(d, "a")
-Dict{Union{String, Symbol}, Number} with 1 entry:
+Dict{Union{AbstractString, Symbol}, Number} with 1 entry:
   "a" => 2
 ```
 """
@@ -133,7 +156,7 @@ julia> using AdvancedLayoutCalculator.TextProcessor
 julia> d = Dict{PChar, Number}("a" => 2);
 
 julia> AdvancedLayoutCalculator.TextProcessor._updatedict!(d, PChar[:shift, "e", "e", "C", "a"])
-Dict{Union{String, Symbol}, Number} with 4 entries:
+Dict{Union{AbstractString, Symbol}, Number} with 4 entries:
   :shift => 1
   "e"    => 2
   "C"    => 1
