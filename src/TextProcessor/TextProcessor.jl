@@ -4,13 +4,27 @@ module TextProcessor
     const PChar = Union{AbstractString, Symbol}
     export PChar
 
+    include("processedstring.jl")
+    export PString, getv, to_string, to_pstring
+
     include("frequency.jl")
-    export getngrams, RawPiece
+    export getngrams, RawPiece, getcountsdict, gettotal
+    """
+        getcd
+    
+    Alias for `getcountsdict`
+    """
+    const getcd = getcountsdict
+    """
+        gett
+    
+    Alias for `gettotal`
+    """
+    const gett = gettotal
+    export getcd, gett
 
     include("procpiece.jl")
     export ProcPiece
 
-    include("processedstring.jl")
-    export PString, getv, to_string, to_pstring
 
 end

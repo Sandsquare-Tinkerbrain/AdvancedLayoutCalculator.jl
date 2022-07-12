@@ -57,14 +57,14 @@ end
     @test d["eLh"] == 1
 
     r1 = RawPiece("heLh", 3)
-    @test r1.counts == d
-    @test r1.total == 9
+    @test getcountsdict(r1) == d
+    @test gettotal(r1) == 9
     r2 = RawPiece(d, 9)
-    @test r2.counts == d
-    @test r2.total == 9
+    @test getcountsdict(r2) == d
+    @test gettotal(r2) == 9
     r3 = RawPiece(d)
-    @test r3.counts == d
-    @test r3.total == 9
+    @test getcountsdict(r3) == d
+    @test gettotal(r3) == 9
     let err = nothing
         try
             RawPiece(d, 8)
@@ -98,8 +98,8 @@ end
     @test d["paL"] == 1
 
     r1 = RawPiece("apapaL", 3)
-    @test r1.counts == d
-    @test r1.total == 15
+    @test getcountsdict(r1) == d
+    @test gettotal(r1) == 15
 
     d = getngrams("hasta", 4)
     @test length(d) == 13
@@ -118,16 +118,18 @@ end
     @test d["asta"] == 1
 
     r1 = RawPiece("hasta", 4)
-    @test r1.counts == d
-    @test r1.total == 14
+    @test getcd(r1) == d
+    @test gett(r1) == 14
 end
 
 @testset "actual text" begin
     f = "../1342-0.txt"
     open(f, "r") do fi
         s = read(f, String)
+        println(length(s))
         d = getngrams(s, 4)
         println(length(d))
+
     end
 
 end

@@ -24,15 +24,15 @@ struct RawPiece <: AbstractPiece
     counts::Dict{String, Int}
     total::Int
 
-    function RawPiece(c::Dict{<:PChar, <:Number})
-        newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
-        s = sum(values(newc))
-        return new(newc, s)
+    function RawPiece(c::Dict{String, Int})
+        # newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
+        s = sum(values(c))
+        return new(c, s)
     end
-    function RawPiece(c::Dict{<:PChar, <:Number}, t::Int)
-        newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
-        s = sum(values(newc))
-        s != t ? error("Sum of 'counts' ($s) must equal the 'total' ($t)!") : new(newc, t)
+    function RawPiece(c::Dict{String, Int}, t::Int)
+        # newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
+        s = sum(values(c))
+        s != t ? error("Sum of 'counts' ($s) must equal the 'total' ($t)!") : new(c, t)
     end
 end
 
@@ -43,9 +43,13 @@ Get RawPiece from `rawtext` up to `n` grams.
 """
 function RawPiece(rawtext::String, up2n::Int)
     d = getngrams(rawtext, up2n)
-    newd = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(d))
-    return RawPiece(newd)
+    # newd = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(d))
+    return RawPiece(d)
 end
+
+getcountsdict(r::AbstractPiece) = r.counts
+gettotal(r::AbstractPiece) = r.total
+
 
 
 """
@@ -57,7 +61,7 @@ Get all n-grams up to n.
 julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> getngrams("heLo", 4)
-Dict{Union{AbstractString, Symbol}, Number} with 10 entries:
+Dict{String, Int64} with 10 entries:
   "eLo"  => 1
   "heLo" => 1
   "e"    => 1
@@ -71,12 +75,12 @@ Dict{Union{AbstractString, Symbol}, Number} with 10 entries:
 
 ```
 """
-function getngrams(rawtext::String, up2n::Int)
+function getngrams(rawtext::AbstractString, up2n::Int)
     total = length(rawtext)
     if up2n > total
         error("Max ngram size ($up2n) can't be greater than length of text ($total)!")
     end
-    d = Dict{PChar, Number}()
+    d = Dict{String, Int}()
 
     subgramsizes = 1:up2n-1
 
@@ -117,7 +121,7 @@ julia> AdvancedLayoutCalculator.TextProcessor._ngram("hello Ez", 3)
 ```
 """
 function _ngram(s::AbstractString, n::Int)
-    grams = AbstractString[]
+    grams = SubString{String}[]
     validinds = collect(eachindex(s))
     for i in 1:length(s)-n+1
         startind = validinds[i]
@@ -142,7 +146,7 @@ Dict{Union{AbstractString, Symbol}, Number} with 1 entry:
   "a" => 2
 ```
 """
-function _updatedict!(d::Dict{<:PChar, <:Number}, k::PChar)
+function _updatedict!(d, k)
     d[k] = get(d, k, 0) + 1
     return d
 end
@@ -163,7 +167,7 @@ Dict{Union{AbstractString, Symbol}, Number} with 4 entries:
   "a"    => 3
 ```
 """
-function _updatedict!(d::Dict{<:PChar, <:Number}, karr::Array{<:PChar})
+function _updatedict!(d, karr::Array)
     for k in karr
         _updatedict!(d, k)
     end

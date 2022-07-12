@@ -10,18 +10,16 @@ julia> d = Dict("A" => 10, "e" => 4);
 ```
 """
 struct ProcPiece <: AbstractPiece
-    counts::Dict{<:PChar, Int}
+    counts::Dict{PString, Int}
     total::Int
 
-    function ProcPiece(c::Dict{<:PChar, <:Number})
-        newc = Dict(k => convert(Int, v) for (k, v) in pairs(c))
-        s = sum(values(newc))
-        return new(newc, s)
+    function ProcPiece(c::Dict{PString, Int})
+        s = sum(values(c))
+        return new(c, s)
     end
-    function ProcPiece(c::Dict{<:PChar, <:Number}, t::Int)
-        newc = Dict(k => convert(Int, v) for (k, v) in pairs(c))
-        s = sum(values(newc))
-        s != t ? error("Sum of 'counts' ($s) must equal the 'total' ($t)!") : new(newc, t)
+    function ProcPiece(c::Dict{PString, Int}, t::Int)
+        s = sum(values(c))
+        s != t ? error("Sum of 'counts' ($s) must equal the 'total' ($t)!") : new(c, t)
     end
 end
 

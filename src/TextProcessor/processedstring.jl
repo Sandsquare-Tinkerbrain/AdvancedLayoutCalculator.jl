@@ -13,7 +13,7 @@ struct PString <: AbstractPString
 end
 getv(pstr::PString) = pstr.v
 Base.length(pstr::PString) = length(getv(pstr))
-Base.getindex(pstr::PString, i::Int64) = getindex(getv(pstr), i)
+Base.getindex(pstr::PString, i::Int) = getindex(getv(pstr), i)
 # TODO: equals
 
 function PString(text::String)::PString
