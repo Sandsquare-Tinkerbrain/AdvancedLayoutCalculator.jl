@@ -24,7 +24,9 @@ struct ProcPiece <: AbstractPiece
 end
 
 function ProcPiece(r::RawPiece)
-    
+    # loop through each key
+    # convert key String to PString
+    # calculate what needs to be updated, max gram length still needed I think
 end
 
 # function ProcPiece(rawtext::String, up2n::Int)
