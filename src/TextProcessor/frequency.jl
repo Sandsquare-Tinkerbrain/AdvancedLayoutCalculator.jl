@@ -80,7 +80,7 @@ function getngrams(rawtext::AbstractString, up2n::Int)
     if up2n > total
         error("Max ngram size ($up2n) can't be greater than length of text ($total)!")
     end
-    d = Dict{String, Int}()
+    d = Dict{Int, Dict{String, Int}}()
 
     subgramsizes = 1:up2n-1
 
@@ -146,8 +146,10 @@ Dict{Union{AbstractString, Symbol}, Number} with 1 entry:
   "a" => 2
 ```
 """
-function _updatedict!(d, k)
-    d[k] = get(d, k, 0) + 1
+function _updatedict!(d::Dict{T, Dict{U, V}}, k::U) where {T, U, V}
+    ngram = length(k)
+    d[ngram] = get(d, ngram, Dict{U, V}())
+    d[ngram][k] = get(d[ngram], k, 0) + 1
     return d
 end
 
@@ -167,7 +169,7 @@ Dict{Union{AbstractString, Symbol}, Number} with 4 entries:
   "a"    => 3
 ```
 """
-function _updatedict!(d, karr::Array)
+function _updatedict!(d::Dict{T, Dict{U, V}}, karr::Array{U}) where {T, U, V}
     for k in karr
         _updatedict!(d, k)
     end

@@ -9,15 +9,33 @@ Special type of string that can keep track of things like mods (e.g., shift).
 """
 struct PString <: AbstractPString
     v::AbstractArray{PChar}
-
 end
 getv(pstr::PString) = pstr.v
 Base.length(pstr::PString) = length(getv(pstr))
 Base.getindex(pstr::PString, i::Int) = getindex(getv(pstr), i)
-# TODO: equals
+Base.getindex(d::Dict{PString, T}, s::String) where T = getindex(d, PString(s))
+Base.getindex(d::Dict{PString, T}, s::Symbol) where T = getindex(d, PString(s))
+Base.convert(::Type{PString}, s::String) = to_pstring(s)
+Base.convert(::Type{String}, p::PString) = to_string(p)
+Base.convert(::Type{PString}, s::Symbol) = PString(s)
+import Base: ==, hash
+function ==(p1::PString, p2::PString) 
+    if length(p1) != length(p2) return false end
+    for i in 1:length(p1)
+        if p1[i] != p2[i] return false end
+    end
+    return true
+end
+function hash(p::PString, h::UInt)
+    return hash(getv(p), h)
+end
+
 
 function PString(text::String)::PString
     return to_pstring(text)
+end
+function PString(s::Symbol)::PString
+    return PString(Symbol[s])
 end
 
 
