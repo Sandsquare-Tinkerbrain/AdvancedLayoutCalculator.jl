@@ -21,18 +21,26 @@ ERROR: Sum of 'counts' (14) must equal the 'total' (15)!
 ```
 """
 struct RawPiece <: AbstractPiece
-    counts::Dict{String, Int}
-    total::Int
+    counts::Dict{Int, Dict{String, Int}}
+    totals::Vector{Int}
 
-    function RawPiece(c::Dict{String, Int})
+    function RawPiece(c::Dict{Int, Dict{String, Int}})
         # newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
-        s = sum(values(c))
-        return new(c, s)
+        totals = Int[]
+        for ngram in 1:length(c)
+            push!(totals, sum(values(c[ngram])))
+        end
+        return new(c, totals)
     end
-    function RawPiece(c::Dict{String, Int}, t::Int)
+    function RawPiece(c::Dict{Int, Dict{String, Int}}, t::Vector{Int})
         # newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
-        s = sum(values(c))
-        s != t ? error("Sum of 'counts' ($s) must equal the 'total' ($t)!") : new(c, t)
+        for ngram in 1:length(c)
+            s = sum(values(c[ngram]))
+            if s != t[ngram]
+                error("For ngram ($ngram), sum of 'counts' ($s) must equal the 'total' ($(t[ngram]))!")
+            end
+        end
+        return new(c, t)
     end
 end
 
@@ -48,7 +56,7 @@ function RawPiece(rawtext::String, up2n::Int)
 end
 
 getcountsdict(r::AbstractPiece) = r.counts
-gettotal(r::AbstractPiece) = r.total
+gettotals(r::AbstractPiece) = r.totals
 
 
 
@@ -89,12 +97,12 @@ function getngrams(rawtext::AbstractString, up2n::Int)
     for i in 1:total-up2n+1
         startind = validinds[i]
         endind = validinds[i+up2n-1] 
-        ss = view(rawtext, startind:endind)
+        ss = rawtext[startind:endind]
         for sgs in subgramsizes
             validss = collect(eachindex(ss))
             startss = validss[end-sgs+1]
             endss = validss[end]
-            untouched = if i == 1 ss else view(ss, startss:endss) end
+            untouched = if i == 1 ss else ss[startss:endss] end
             subgrams = _ngram(untouched, sgs)
             _updatedict!(d, subgrams)
         end
@@ -121,12 +129,12 @@ julia> AdvancedLayoutCalculator.TextProcessor._ngram("hello Ez", 3)
 ```
 """
 function _ngram(s::AbstractString, n::Int)
-    grams = SubString{String}[]
+    grams = String[]
     validinds = collect(eachindex(s))
     for i in 1:length(s)-n+1
         startind = validinds[i]
         endind = validinds[i+n-1]
-        push!(grams, view(s, startind:endind))
+        push!(grams, s[startind:endind])
     end
     # [view(s,i:i+n-1) for i=1:length(s)-n+1]
     return grams
@@ -169,7 +177,7 @@ Dict{Union{AbstractString, Symbol}, Number} with 4 entries:
   "a"    => 3
 ```
 """
-function _updatedict!(d::Dict{T, Dict{U, V}}, karr::Array{U}) where {T, U, V}
+function _updatedict!(d::Dict{T, Dict{U, V}}, karr::Array{<:U}) where {T, U, V}
     for k in karr
         _updatedict!(d, k)
     end
