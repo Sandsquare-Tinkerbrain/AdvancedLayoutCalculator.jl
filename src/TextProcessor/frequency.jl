@@ -49,19 +49,34 @@ end
 
 Get Piece from `rawtext` up to `n` grams.
 """
-function Piece(rawtext::String, up2n::Int)
+function Piece{String, Int}(rawtext::String, up2n::Int)
     d = getngrams(rawtext, up2n)
     # newd = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(d))
     return Piece(d)
+end
+function Piece(rawtext::String, up2n::Int)
+    return Piece{String, Int}(rawtext, up2n)
+end
+
+Base.eltype(::Piece{U, V}) where {U, V} = Pair{U, V}
+import Base: ==, hash
+function ==(p1::Piece{T1, U1}, p2::Piece{T2, U2}) where {T1, U1, T2, U2} 
+    if T1 != T2 || U1 != U2 return false end
+    if getcd(p1) != getcd(p2) return false end
+    if gett(p1) != gett(p2) return false end
+    return true
+end
+function hash(p::Piece{T, U}, h::UInt) where {T, U}
+    return hash((getcd(p), gett(p)), h)
 end
 
 getcountsdict(r::AbstractPiece) = r.counts
 gettotals(r::AbstractPiece) = r.totals
 
 const RawPieceC = Piece{String, Int}
-const ProcPieceC = Piece{PString, Int}
-const RawPieceF = Piece{String, Float64}
-const ProcPieceF = Piece{PString, Float64}
+# const ProcPieceC = Piece{PString, Int}
+# const RawPieceF = Piece{String, Float64}
+# const ProcPieceF = Piece{PString, Float64}
 
 """
     getngrams(::String, ::Int)

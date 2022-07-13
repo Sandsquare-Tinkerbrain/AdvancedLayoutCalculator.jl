@@ -146,6 +146,9 @@ end
 
 @testset "Other Piece types" begin
     p = Piece("Hi", 2)
-    println(typeof(p))
+    q = RawPieceC("Hi", 2)
+    r = Piece{String, Int}("Hi", 2)
+    @test p == q
+    @test q == r
 end
 
