@@ -8,7 +8,7 @@ module TextProcessor
     export PString, getv, to_string, to_pstring
 
     include("frequency.jl")
-    export getngrams, RawPiece, getcountsdict, gettotal
+    export getngrams, RawPiece, getcountsdict, gettotals
     """
         getcd
     
@@ -20,7 +20,7 @@ module TextProcessor
     
     Alias for `gettotal`
     """
-    const gett = gettotal
+    const gett = gettotals
     export getcd, gett
 
     include("procpiece.jl")
