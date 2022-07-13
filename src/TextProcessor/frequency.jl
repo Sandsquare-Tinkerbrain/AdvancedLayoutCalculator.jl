@@ -14,10 +14,10 @@ Stores n-gram counts of a piece of text. Only accounts for raw characters.
 ```jldoctest
 julia> using AdvancedLayoutCalculator.TextProcessor
 
-julia> d = Dict("a" => 10, "e" => 4); 
+julia> d = Dict(1 => Dict("a" => 10, "e" => 4)); 
 
-julia> RawPiece(d, 15)
-ERROR: Sum of 'counts' (14) must equal the 'total' (15)!
+julia> RawPiece(d, [15])
+ERROR: For ngram (1), sum of 'counts' (14) must equal the 'total' (15)!
 ```
 """
 struct RawPiece <: AbstractPiece
@@ -69,18 +69,11 @@ Get all n-grams up to n.
 julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> getngrams("heLo", 4)
-Dict{String, Int64} with 10 entries:
-  "eLo"  => 1
-  "heLo" => 1
-  "e"    => 1
-  "o"    => 1
-  "Lo"   => 1
-  "L"    => 1
-  "he"   => 1
-  "h"    => 1
-  "eL"   => 1
-  "heL"  => 1
-
+Dict{Int64, Dict{String, Int64}} with 4 entries:
+  4 => Dict("heLo"=>1)
+  2 => Dict("Lo"=>1, "he"=>1, "eL"=>1)
+  3 => Dict("heL"=>1, "eLo"=>1)
+  1 => Dict("e"=>1, "o"=>1, "L"=>1, "h"=>1)
 ```
 """
 function getngrams(rawtext::AbstractString, up2n::Int)
@@ -119,7 +112,7 @@ https://stackoverflow.com/questions/42360957/generate-ngrams-with-julia
 
 ```jldoctest
 julia> AdvancedLayoutCalculator.TextProcessor._ngram("hello Ez", 3)
-6-element Vector{SubString{String}}:
+6-element Vector{String}:
  "hel"
  "ell"
  "llo"
@@ -147,11 +140,11 @@ end
 ```jldoctest updatedictdoctests
 julia> using AdvancedLayoutCalculator.TextProcessor
 
-julia> d = Dict{PChar, Number}("a" => 1);
+julia> d = Dict(1 => Dict{String, Int}("a" => 1));
 
 julia> AdvancedLayoutCalculator.TextProcessor._updatedict!(d, "a")
-Dict{Union{AbstractString, Symbol}, Number} with 1 entry:
-  "a" => 2
+Dict{Int64, Dict{String, Int64}} with 1 entry:
+  1 => Dict("a"=>2)
 ```
 """
 function _updatedict!(d::Dict{T, Dict{U, V}}, k::U) where {T, U, V}
@@ -167,14 +160,18 @@ end
 ```jldoctest updatedictdoctests
 julia> using AdvancedLayoutCalculator.TextProcessor
 
-julia> d = Dict{PChar, Number}("a" => 2);
+julia> d = Dict(1 => Dict{PString, Int}(PString("a") => 2));
 
-julia> AdvancedLayoutCalculator.TextProcessor._updatedict!(d, PChar[:shift, "e", "e", "C", "a"])
-Dict{Union{AbstractString, Symbol}, Number} with 4 entries:
-  :shift => 1
-  "e"    => 2
-  "C"    => 1
-  "a"    => 3
+julia> AdvancedLayoutCalculator.TextProcessor._updatedict!(d, PString[:shift, "a", "bd"]);
+
+julia> d[1]
+Dict{PString, Int64} with 2 entries:
+  PString(Union{AbstractString, Symbol}[:shift]) => 1
+  PString(Union{AbstractString, Symbol}["a"])    => 3
+
+julia> d[2]
+Dict{PString, Int64} with 1 entry:
+  PString(Union{AbstractString, Symbol}["b", "d"]) => 1
 ```
 """
 function _updatedict!(d::Dict{T, Dict{U, V}}, karr::Array{<:U}) where {T, U, V}
