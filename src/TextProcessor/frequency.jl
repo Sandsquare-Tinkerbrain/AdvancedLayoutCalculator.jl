@@ -3,11 +3,11 @@
 
 An abstract type representing a piece of text.
 """
-abstract type AbstractPiece end
+abstract type AbstractPiece{T, U} end
 
 
 """
-    RawPiece
+    Piece
 
 Stores n-gram counts of a piece of text. Only accounts for raw characters.
 
@@ -16,23 +16,23 @@ julia> using AdvancedLayoutCalculator.TextProcessor
 
 julia> d = Dict(1 => Dict("a" => 10, "e" => 4)); 
 
-julia> RawPiece(d, [15])
+julia> Piece(d, [15])
 ERROR: For ngram (1), sum of 'counts' (14) must equal the 'total' (15)!
 ```
 """
-struct RawPiece <: AbstractPiece
-    counts::Dict{Int, Dict{String, Int}}
+struct Piece{T <: UnString, U <: IntFloat} <: AbstractPiece{T, U}
+    counts::Dict{Int, Dict{T, U}}
     totals::Vector{Int}
 
-    function RawPiece(c::Dict{Int, Dict{String, Int}})
+    function Piece(c::Dict{Int, Dict{T, U}}) where {T <: UnString, U <: IntFloat}
         # newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
         totals = Int[]
         for ngram in 1:length(c)
             push!(totals, sum(values(c[ngram])))
         end
-        return new(c, totals)
+        return new{T, U}(c, totals)
     end
-    function RawPiece(c::Dict{Int, Dict{String, Int}}, t::Vector{Int})
+    function Piece(c::Dict{Int, Dict{T, U}}, t::Vector{Int}) where {T <: UnString, U <: IntFloat}
         # newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
         for ngram in 1:length(c)
             s = sum(values(c[ngram]))
@@ -40,25 +40,28 @@ struct RawPiece <: AbstractPiece
                 error("For ngram ($ngram), sum of 'counts' ($s) must equal the 'total' ($(t[ngram]))!")
             end
         end
-        return new(c, t)
+        return new{T, U}(c, t)
     end
 end
 
 """
-    RawPiece(rawtext::String, n::Int)
+    Piece(rawtext::String, n::Int)
 
-Get RawPiece from `rawtext` up to `n` grams.
+Get Piece from `rawtext` up to `n` grams.
 """
-function RawPiece(rawtext::String, up2n::Int)
+function Piece(rawtext::String, up2n::Int)
     d = getngrams(rawtext, up2n)
     # newd = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(d))
-    return RawPiece(d)
+    return Piece(d)
 end
 
 getcountsdict(r::AbstractPiece) = r.counts
 gettotals(r::AbstractPiece) = r.totals
 
-
+const RawPieceC = Piece{String, Int}
+const ProcPieceC = Piece{PString, Int}
+const RawPieceF = Piece{String, Float64}
+const ProcPieceF = Piece{PString, Float64}
 
 """
     getngrams(::String, ::Int)

@@ -68,18 +68,18 @@ end
     @test d[3]["heL"] == 1
     @test d[3]["eLh"] == 1
 
-    r1 = RawPiece("heLh", 3)
+    r1 = Piece("heLh", 3)
     @test getcountsdict(r1) == d
     @test gettotals(r1) == Int[4, 3, 2]
-    r2 = RawPiece(d, Int[4, 3, 2])
+    r2 = Piece(d, Int[4, 3, 2])
     @test getcountsdict(r2) == d
     @test gettotals(r2) == Int[4, 3, 2]
-    r3 = RawPiece(d)
+    r3 = Piece(d)
     @test getcountsdict(r3) == d
     @test gettotals(r3) == Int[4, 3, 2]
     let err = nothing
         try
-            RawPiece(d, Int[3, 3, 2])
+            Piece(d, Int[3, 3, 2])
         catch err
         end
 
@@ -109,7 +109,7 @@ end
     @test d[3]["pap"] == 1
     @test d[3]["paL"] == 1
 
-    r1 = RawPiece("apapaL", 3)
+    r1 = Piece("apapaL", 3)
     @test getcountsdict(r1) == d
     @test gettotals(r1) == Int[6, 5, 4]
 
@@ -129,20 +129,23 @@ end
     @test d[4]["hast"] == 1
     @test d[4]["asta"] == 1
 
-    r1 = RawPiece("hasta", 4)
+    r1 = Piece("hasta", 4)
     @test getcd(r1) == d
     @test gett(r1) == Int[5, 4, 3, 2]
 end
 
 # @testset "actual text" begin
-#     f = "../1342-0.txt"
+#     f = "./data/1342-0.txt"
 #     open(f, "r") do fi
 #         s = read(f, String)
 #         println(length(s))
 #         d = getngrams(s, 4)
 #         println(length(d))
-
 #     end
-
 # end
+
+@testset "Other Piece types" begin
+    p = Piece("Hi", 2)
+    println(typeof(p))
+end
 
