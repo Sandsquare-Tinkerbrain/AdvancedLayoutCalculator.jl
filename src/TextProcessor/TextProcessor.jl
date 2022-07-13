@@ -13,7 +13,7 @@ module TextProcessor
     export UnString
 
     include("frequency.jl")
-    export getngrams, Piece, getcountsdict, gettotals, RawPieceC, ProcPieceC, RawPieceF, ProcPieceF
+    export getngrams, Piece, getcountsdict, gettotals, RawPieceC, ProcPieceC, RawPieceF, ProcPieceF, raw2processed
     """
         getcd
     

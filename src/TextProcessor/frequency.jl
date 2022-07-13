@@ -27,17 +27,17 @@ struct Piece{T <: UnString, U <: IntFloat} <: AbstractPiece{T, U}
     function Piece(c::Dict{Int, Dict{T, U}}) where {T <: UnString, U <: IntFloat}
         # newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
         totals = Int[]
-        for ngram in 1:length(c)
-            push!(totals, sum(values(c[ngram])))
+        for n in 1:length(c)
+            push!(totals, sum(values(c[n])))
         end
         return new{T, U}(c, totals)
     end
     function Piece(c::Dict{Int, Dict{T, U}}, t::Vector{Int}) where {T <: UnString, U <: IntFloat}
         # newc = Dict(convert(String, k) => convert(Int, v) for (k, v) in pairs(c))
-        for ngram in 1:length(c)
-            s = sum(values(c[ngram]))
-            if s != t[ngram]
-                error("For ngram ($ngram), sum of 'counts' ($s) must equal the 'total' ($(t[ngram]))!")
+        for n in 1:length(c)
+            s = sum(values(c[n]))
+            if s != t[n]
+                error("For ngram ($n), sum of 'counts' ($s) must equal the 'total' ($(t[n]))!")
             end
         end
         return new{T, U}(c, t)
@@ -78,6 +78,26 @@ const RawPieceC = Piece{String, Int}
 # const RawPieceF = Piece{String, Float64}
 # const ProcPieceF = Piece{PString, Float64}
 
+
+"""
+    raw2processed
+"""
+function raw2processed(p::RawPieceC)
+    d = Dict{Int, Dict{PString, Int}}()
+    rawcd = getcd(p)
+    for n in 1:maximum(keys(rawcd))
+        for ngram in keys(rawcd[n])
+            pstr = to_pstring(ngram)
+            if length(ngram) == length(pstr)
+                _updatedict!(d, pstr, rawcd[n][ngram])
+            else
+
+            end
+        end
+    end
+    return d
+end
+
 """
     getngrams(::String, ::Int)
 
@@ -94,12 +114,12 @@ Dict{Int64, Dict{String, Int64}} with 4 entries:
   1 => Dict("e"=>1, "o"=>1, "L"=>1, "h"=>1)
 ```
 """
-function getngrams(rawtext::AbstractString, up2n::Int)
+function getngrams(rawtext::T, up2n::Int) where T <: UnString
     total = length(rawtext)
     if up2n > total
         error("Max ngram size ($up2n) can't be greater than length of text ($total)!")
     end
-    d = Dict{Int, Dict{String, Int}}()
+    d = Dict{Int, Dict{T, Int}}()
 
     subgramsizes = 1:up2n-1
 
@@ -139,8 +159,8 @@ julia> AdvancedLayoutCalculator.TextProcessor._ngram("hello Ez", 3)
  " Ez"
 ```
 """
-function _ngram(s::AbstractString, n::Int)
-    grams = String[]
+function _ngram(s::T, n::Int) where T <: UnString
+    grams = T[]
     validinds = collect(eachindex(s))
     for i in 1:length(s)-n+1
         startind = validinds[i]
@@ -153,7 +173,9 @@ end
 
 
 """
-    _updatedict!(::Dict, ::PChar)
+    _updatedict!(::Dict, k)
+
+Increment count of key `k` by one.
 
 ```jldoctest updatedictdoctests
 julia> using AdvancedLayoutCalculator.TextProcessor
@@ -166,14 +188,29 @@ Dict{Int64, Dict{String, Int64}} with 1 entry:
 ```
 """
 function _updatedict!(d::Dict{T, Dict{U, V}}, k::U) where {T, U, V}
-    ngram = length(k)
-    d[ngram] = get(d, ngram, Dict{U, V}())
-    d[ngram][k] = get(d[ngram], k, 0) + 1
+    n = length(k)
+    d[n] = get(d, n, Dict{U, V}())
+    d[n][k] = get(d[n], k, 0) + 1
     return d
 end
 
 """
-    _updatedict!(::Dict, ::PChar)
+    _updatedict!(::Dict, k, v)
+    
+Update dict according to key `k` with value `v`.
+```
+"""
+function _updatedict!(d::Dict{T, Dict{U, V}}, k::U, v::V) where {T, U, V}
+    n = length(k)
+    d[n] = get(d, n, Dict{U, V}())
+    d[n][k] = v
+    return d
+end
+
+"""
+    _updatedict!(::Dict, karr)
+
+For each key in `karr`, increment its value by 1.
 
 ```jldoctest updatedictdoctests
 julia> using AdvancedLayoutCalculator.TextProcessor

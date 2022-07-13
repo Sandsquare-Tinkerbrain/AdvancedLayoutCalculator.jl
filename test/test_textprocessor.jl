@@ -39,6 +39,8 @@ end
     @test length(d) == 2
     @test length(d[2]) == 1
     @test d[2]["sa"] == 1
+    _updatedict!(d, "sa", 49)
+    @test d[2]["sa"] == 49
     
     d = Dict{Int, Dict{PString, Int}}(1 => Dict(PString("a") => 1))
     _updatedict!(d, PString[:shift, "e", "e", "c", "a", "bd"])
@@ -50,6 +52,9 @@ end
     @test d[1]["a"] == 2
     @test d[2]["bd"] == 1
     @test length(d[2]) == 1
+    _updatedict!(d, PString(:shift), 64)
+    @test d[1][:shift] == 64
+
 end
 
 @testset "ngram" begin
@@ -141,6 +146,7 @@ end
 #         println(length(s))
 #         d = getngrams(s, 4)
 #         println(length(d))
+#         println(sum(values(d[1])))
 #     end
 # end
 
@@ -150,5 +156,10 @@ end
     r = Piece{String, Int}("Hi", 2)
     @test p == q
     @test q == r
+
+    d2 = raw2processed(p)
+    println(d2)
+    @test d2[1]["i"] == 1
+    
 end
 

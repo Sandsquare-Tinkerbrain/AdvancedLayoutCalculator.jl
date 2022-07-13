@@ -12,17 +12,19 @@ struct PString <: AbstractPString
 end
 getv(pstr::PString) = pstr.v
 Base.length(pstr::PString) = length(getv(pstr))
-Base.getindex(pstr::PString, i::Int) = getindex(getv(pstr), i)
+Base.getindex(pstr::PString, i::Int) = PString(getindex(getv(pstr), i))
+Base.getindex(pstr::PString, r::UnitRange) = PString(getindex(getv(pstr), r))
 Base.getindex(d::Dict{PString, T}, s::U) where {T, U<:Union{String, Symbol}} = getindex(d, PString(s))
 Base.setindex!(d::Dict{PString, T}, v::U, k::V) where {T, U, V<:Union{String, Symbol}} = error("For Dict{PString, T}, contents can be viewed with keys of type $V but they cannot be set.")
 Base.convert(::Type{PString}, s::String) = to_pstring(s)
 Base.convert(::Type{String}, p::PString) = to_string(p)
 Base.convert(::Type{PString}, s::Symbol) = PString(s)
+Base.eachindex(pstr::PString) = eachindex(getv(pstr))
 import Base: ==, hash
 function ==(p1::PString, p2::PString) 
     if length(p1) != length(p2) return false end
     for i in 1:length(p1)
-        if p1[i] != p2[i] return false end
+        if getv(p1)[i] != getv(p2)[i] return false end
     end
     return true
 end
