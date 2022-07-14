@@ -2,6 +2,7 @@ module TextProcessor
 
 
     const PChar = Union{AbstractString, Symbol}
+    Base.show(io::IO, ::Type{PChar}) = print(io, "PChar")
     export PChar
     const IntFloat = Union{Int, Float64}
     export IntFloat

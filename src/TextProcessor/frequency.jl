@@ -59,6 +59,7 @@ function Piece(rawtext::String, up2n::Int)
 end
 
 Base.eltype(::Piece{U, V}) where {U, V} = Pair{U, V}
+Base.show(io::IO, ::Type{Dict{Int64, Dict{T, U}}}) where {T, U} = print(io, "PieceDict{$T, $U}")
 import Base: ==, hash
 function ==(p1::Piece{T1, U1}, p2::Piece{T2, U2}) where {T1, U1, T2, U2} 
     if T1 != T2 || U1 != U2 return false end
@@ -88,10 +89,18 @@ function raw2processed(p::RawPieceC)
     for n in 1:maximum(keys(rawcd))
         for ngram in keys(rawcd[n])
             pstr = to_pstring(ngram)
+            
             if length(ngram) == length(pstr)
                 _updatedict!(d, pstr, rawcd[n][ngram])
             else
-
+                println("raw2processed $pstr")
+                grams = _ngram(pstr, n)
+                println("raw2processed $grams")
+                for gram in grams
+                    println("raw2processed $gram")
+                    _updatedict!(d, gram, rawcd[n][gram]; op=:add)
+                end
+                
             end
         end
     end
@@ -165,6 +174,7 @@ function _ngram(s::T, n::Int) where T <: UnString
     for i in 1:length(s)-n+1
         startind = validinds[i]
         endind = validinds[i+n-1]
+        println("_ngram $(s[startind:endind])")
         push!(grams, s[startind:endind])
     end
     # [view(s,i:i+n-1) for i=1:length(s)-n+1]
@@ -200,10 +210,16 @@ end
 Update dict according to key `k` with value `v`.
 ```
 """
-function _updatedict!(d::Dict{T, Dict{U, V}}, k::U, v::V) where {T, U, V}
+function _updatedict!(d::Dict{T, Dict{U, V}}, k::U, v::V; op=:set) where {T, U, V}
     n = length(k)
     d[n] = get(d, n, Dict{U, V}())
-    d[n][k] = v
+    if op == :set
+        d[n][k] = v
+    elseif op == :add
+        d[n][k] = get(d[n], k, 0) + v
+    else
+        d[n][k] = v
+    end
     return d
 end
 

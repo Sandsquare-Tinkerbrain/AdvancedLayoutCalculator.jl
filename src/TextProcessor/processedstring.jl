@@ -12,14 +12,17 @@ struct PString <: AbstractPString
 end
 getv(pstr::PString) = pstr.v
 Base.length(pstr::PString) = length(getv(pstr))
-Base.getindex(pstr::PString, i::Int) = PString(getindex(getv(pstr), i))
-Base.getindex(pstr::PString, r::UnitRange) = PString(getindex(getv(pstr), r))
+# Base.getindex(pstr::PString, i::Int) = PString(getindex(getv(pstr), i))
+Base.getindex(pstr::PString, i::Int) = getindex(getv(pstr), i)
+Base.getindex(pstr::PString, r::UnitRange) = getindex(getv(pstr), r)
 Base.getindex(d::Dict{PString, T}, s::U) where {T, U<:Union{String, Symbol}} = getindex(d, PString(s))
 Base.setindex!(d::Dict{PString, T}, v::U, k::V) where {T, U, V<:Union{String, Symbol}} = error("For Dict{PString, T}, contents can be viewed with keys of type $V but they cannot be set.")
 Base.convert(::Type{PString}, s::String) = to_pstring(s)
 Base.convert(::Type{String}, p::PString) = to_string(p)
 Base.convert(::Type{PString}, s::Symbol) = PString(s)
+Base.convert(::Type{PString}, pchars::Vector{PChar}) = PString(pchars)
 Base.eachindex(pstr::PString) = eachindex(getv(pstr))
+# Base.show(io::IO, pstr::PString) = print(io, "PString($(getv(pstr)))")
 import Base: ==, hash
 function ==(p1::PString, p2::PString) 
     if length(p1) != length(p2) return false end
@@ -62,7 +65,7 @@ function to_string(pstr::PString)::String
     outstr = ""
     nextf(x::String) = identity(x)
     for i in 1:length(pstr)
-        c = pstr[i]
+        c = getv(pstr)[i]
         if c == :shift
             nextf = uppercase
             continue
