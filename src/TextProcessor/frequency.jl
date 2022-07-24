@@ -74,6 +74,11 @@ end
 getcountsdict(r::AbstractPiece) = r.counts
 gettotals(r::AbstractPiece) = r.totals
 
+"""
+    RawPieceC
+
+Raw counts of ngrams in the text. `Piece{String, Int}`
+"""
 const RawPieceC = Piece{String, Int}
 # const ProcPieceC = Piece{PString, Int}
 # const RawPieceF = Piece{String, Float64}
@@ -86,24 +91,28 @@ const RawPieceC = Piece{String, Int}
 function raw2processed(p::RawPieceC)
     d = Dict{Int, Dict{PString, Int}}()
     rawcd = getcd(p)
-    for n in 1:maximum(keys(rawcd))
+    for n in maximum(keys(rawcd)):-1:1
+        d[n] = get(d, n, Dict{PString, Int}())
+    end
+    n = maximum(keys(rawcd))
+    # for n in maximum(keys(rawcd)):-1:1
         for ngram in keys(rawcd[n])
+            ngramcount = rawcd[n][ngram]
+            println("raw2processed ngram to convert $ngram")
+            println(d)
             pstr = to_pstring(ngram)
             
-            if length(ngram) == length(pstr)
-                _updatedict!(d, pstr, rawcd[n][ngram])
-            else
-                println("raw2processed $pstr")
-                grams = _ngram(pstr, n)
+            println("raw2processed $pstr")
+            for eachn in 1:n
+                grams = _ngram(pstr, eachn)
                 println("raw2processed $grams")
                 for gram in grams
-                    println("raw2processed $gram")
-                    _updatedict!(d, gram, rawcd[n][gram]; op=:add)
+                    println("raw2processed $gram, $ngramcount")
+                    _updatedict!(d, gram, ngramcount; op=:add)
                 end
-                
-            end
+            end   
         end
-    end
+    # end
     return d
 end
 
@@ -174,7 +183,7 @@ function _ngram(s::T, n::Int) where T <: UnString
     for i in 1:length(s)-n+1
         startind = validinds[i]
         endind = validinds[i+n-1]
-        println("_ngram $(s[startind:endind])")
+        # println("_ngram $(s[startind:endind])")
         push!(grams, s[startind:endind])
     end
     # [view(s,i:i+n-1) for i=1:length(s)-n+1]
@@ -212,10 +221,11 @@ Update dict according to key `k` with value `v`.
 """
 function _updatedict!(d::Dict{T, Dict{U, V}}, k::U, v::V; op=:set) where {T, U, V}
     n = length(k)
-    d[n] = get(d, n, Dict{U, V}())
+    # d[n] = get(d, n, Dict{U, V}())
     if op == :set
         d[n][k] = v
     elseif op == :add
+        println("$(get(d[n], k, 0)) + $v")
         d[n][k] = get(d[n], k, 0) + v
     else
         d[n][k] = v

@@ -158,8 +158,24 @@ end
     @test q == r
 
     d2 = raw2processed(p)
-    println(d2)
+    # println(d2)
     @test d2[1]["i"] == 1
+    @test d2[1][:shift] == 1
+    @test d2[1]["h"] == 1
+    @test d2[2]["hi"] == 1
+    @test d2[2][PString(:shift, "h")] == 1
     
+    p2 = RawPieceC("Hihi", 3)
+    d2 = raw2processed(p2)
+    @test d2[1][:shift] == 1
+    @test d2[1]["h"] == 2
+    @test d2[1]["i"] == 2
+    @test d2[2][PString(:shift, "h")] == 1
+    @test d2[2]["hi"] == 2
+    @test d2[2]["ih"] == 1
+    @test d2[3][PString(:shift, "h", "i")] == 1
+    @test d2[3]["hih"] == 1
+    @test d2[3]["ihi"] == 1
+
 end
 

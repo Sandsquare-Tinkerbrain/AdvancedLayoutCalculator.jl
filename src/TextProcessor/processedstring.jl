@@ -42,7 +42,9 @@ end
 function PString(s::Symbol)::PString
     return PString(Symbol[s])
 end
-
+function PString(s1, s2, s3...)
+    return PString(PChar[s1, s2, s3...])
+end
 
 """
 to_string(::PString)
@@ -95,9 +97,10 @@ julia> to_string(p)
 """
 function to_pstring(str::String)::PString
     v = PChar[]
-    for i in 1:length(str)
+    validinds = collect(eachindex(str))
+    for i in validinds #1:length(str)
         c = str[i:i]
-        if isuppercase(c[1])
+        if isuppercase(only(c))
             push!(v, :shift)
             push!(v, lowercase(c))
         else
@@ -107,5 +110,21 @@ function to_pstring(str::String)::PString
     return PString(v)
 end
 
+# validinds = collect(eachindex(rawtext))
+
+# for i in 1:total-up2n+1
+#     startind = validinds[i]
+#     endind = validinds[i+up2n-1] 
+#     ss = rawtext[startind:endind]
+#     for sgs in subgramsizes
+#         validss = collect(eachindex(ss))
+#         startss = validss[end-sgs+1]
+#         endss = validss[end]
+#         untouched = if i == 1 ss else ss[startss:endss] end
+#         subgrams = _ngram(untouched, sgs)
+#         _updatedict!(d, subgrams)
+#     end
+#     _updatedict!(d, ss)
+# end
 
 

@@ -1,4 +1,8 @@
+```@index
+Pages = ["frequency.md"]
+```
+
 ```@autodocs
-Modules = [TextProcessor]
+Modules = [AdvancedLayoutCalculator.TextProcessor]
 Pages = ["frequency.jl"]
 ```

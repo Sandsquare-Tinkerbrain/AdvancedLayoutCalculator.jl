@@ -1,4 +1,10 @@
+Stuff for processing strings
+
+```@index
+Pages = ["processedstring.md"]
+```
+
 ```@autodocs
-Modules = [TextProcessor]
+Modules = [AdvancedLayoutCalculator.TextProcessor]
 Pages = ["processedstring.jl"]
 ```
